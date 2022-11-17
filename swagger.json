@@ -1,0 +1,1070 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0.1",
+    "title": "kapusta42back",
+    "description": "Showing off swagger-ui-express",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "consumes": ["application/json", "multipart/form-data"],
+  "produces": ["application/json", "multipart/form-data"],
+  "servers": [
+    {
+      "url": "http://localhost:5000"
+    },
+    { "url": "https://kapusta42back-end.herokuapp.com" }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "User",
+      "description": "User endpoints"
+    },
+    {
+      "name": "Balance",
+      "description": "Balance endpoints"
+    },
+    {
+      "name": "Transaction",
+      "description": "Transaction endpoints"
+    },
+    {
+      "name": "Report",
+      "description": "Report endpoints"
+    }
+  ],
+
+
+
+
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+        "parameters": [],
+        "security": [],
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "409": {
+            "description": "Provided email already exists",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/auth/google": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Google registration and authentication(only allowed from 'Kapusta-app' web aplication)",
+        "parameters": [],
+
+        "responses": {
+          "200": {
+            "description": "Successful operation (redirect to front-end with accessToken)",
+            "content": {}
+          },
+          "403": {
+            "description": "Not registered",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User login",
+        "parameters": [],
+        "security": [],
+        "requestBody": {
+          "description": "Login object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "401": {
+            "description": "Email or password is wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "User logout",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "204": {
+            "description": "Successful operation",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {}
+          },
+          "500": {
+            "description": "Invalid signature",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/user/current": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get information about the current user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {}
+          },
+          "500": {
+            "description": "Invalid signature",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/balance/current": {
+      "get": {
+        "tags": ["Balance"],
+        "summary": "Get user balance",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BalanceResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/balance/update": {
+      "patch": {
+        "tags": ["Balance"],
+        "summary": "Update balance",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Balance object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBalanceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BalanceResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+
+    "/api/transactions/income": {
+      "post": {
+        "tags": ["Transaction"],
+        "summary": "Add income transaction",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Object income",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncomeTransactionRequest"
+              }
+            }
+          }
+        },
+
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IncomeTransactionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/transactions/expense": {
+      "post": {
+        "tags": ["Transaction"],
+        "summary": "Add expense transaction",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Object expense",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExpenseTransactionRequest"
+              }
+            }
+          }
+        },
+
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpanseTransactionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/transactions/{type}/{transactionId}": {
+      "delete": {
+        "tags": ["Transaction"],
+        "summary": "Remove transaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "type",
+            "required": true,
+            "type": "string",
+            "description": "On of 'income' or 'expense'"
+          },
+          {
+            "in": "path",
+            "name": "transactionId",
+            "required": true,
+            "type": "string",
+            "description": "Transaction ID"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteTransactionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/report/summaryByMonth/{year}/{type}": {
+      "get": {
+        "tags": ["Report"],
+        "summary": "Get a report 'income' or 'expense' for all months of the current year",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "year",
+            "required": true,
+            "type": "number",
+            "description": "Enter the year length 4"
+          },
+          {
+            "in": "path",
+            "name": "type",
+            "required": true,
+            "type": "string",
+            "description": "On of 'income' or 'expense'"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportByMonthForYear"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/report/amountByDescription/{category}/{month}/{year}": {
+      "get": {
+        "tags": ["Report"],
+        "summary": "Get a report 'income' or 'expense' for all months of the current year",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "category",
+            "required": true,
+            "type": "string",
+            "description": "Enter the category"
+          },
+          {
+            "in": "path",
+            "name": "month",
+            "required": true,
+            "type": "number",
+            "description": "Enter the year length 2"
+          },
+          {
+            "in": "path",
+            "name": "year",
+            "required": true,
+            "type": "number",
+            "description": "Enter the month length 4"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportByDescriptionForMonthResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/report/byCategory/{month}/{year}": {
+      "get": {
+        "tags": ["Report"],
+        "summary": "Get a report by category for the month and year",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "month",
+            "required": true,
+            "type": "number",
+            "description": "Enter the number 1 - 12",
+            "example": 8
+          },
+          {
+            "in": "path",
+            "name": "year",
+            "required": true,
+            "type": "number",
+            "description": "Enter the year length 4",
+            "example": 2022
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportByCategoryForMonthAndYearResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/report/currentDay/{date}": {
+      "get": {
+        "tags": ["Report"],
+        "summary": "Get report transactions by current day ",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "date",
+            "required": true,
+            "type": "number",
+            "description": "Enter date",
+            "example": "2022-08-23"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportByDayResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RegistrationRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email",
+            "example": "example@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "CurrentResponse":{
+        "type": "object",
+        "required": ["email", "avatarURL", "totalBalance"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "example": "example@gmail.com"
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User's link avatar",
+            "example": "//www.gravatar.com/avatar/cf5831de3973012ae4f2ee60242fb617"
+          },
+          "totalBalance": {
+            "type": "number",
+            "description": "User's balance",
+            "example": 50000
+          }
+        }
+      },
+      "UpdateBalanceRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "totalBalance": {
+            "type": "number",
+            "description": "User's balance",
+            "example": 5000
+          }
+        }
+      },
+      "AddExpenseTransactionRequest": {
+        "type": "object",
+        "required": ["date", "description", "category", "sum", "type"],
+        "properties": {
+          "date": {
+            "type": "string",
+            "description": "Transaction date",
+            "format": "date",
+            "example": "2022-08-30"
+          },
+          "description": {
+            "type": "string",
+            "description": "Transaction description",
+            "example": "Meat"
+          },
+          "category": {
+            "type": "string",
+            "description": [
+              "Транспорт",
+              "Продукти",
+              "Здоров'я",
+              "Алкоголь",
+              "Розваги",
+              "Дім",
+              "Техніка",
+              "Комуналка",
+              "Спорт, хобі",
+              "Освіта",
+              "Інше"
+            ],
+            "example": "products"
+          },
+          "sum": {
+            "type": "number",
+            "description": "summa",
+            "example": 400
+          },
+          "type": {
+            "type": "string",
+            "description": "expense or income",
+            "example": "expense"
+          }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "required": ["user"],
+        "properties":{
+          "user": {
+            "type": "object",
+            "required":["email", "avatarURL", "token"],
+            "properties": {          
+                "email": {
+                  "type": "string",
+                  "example": "example@gmail.com"
+                },
+                "avatarURL": {
+                  "type": "string",
+                  "example": "www.gravatar.com/avatar/afd5b46d171ec84e3796561ca6d4f4a9"
+                },
+                "token": {
+                  "type": "string",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTM3ZThlNTZlY2JiYTJjYTBjNmY2MCIsImlhdCI6MTY2MjIyMjA1MiwiZXhwIjoxNjYyMzA4NDUyfQ.FVVEZEcdKx2VrZqzSY3gQeNbxpblHbt5NjwMzkooNaI"
+                }
+            }
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "required": ["user"],
+        "properties": {
+          "user":{
+            "type": "object",
+            "required": ["email", "token"],
+            "properties":{
+              "email": {
+                "type": "string",
+                "example":"example@gmail.com",
+                "format": "email"
+              },
+              "token": {
+                "type": "string",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTM3ZThlNTZlY2JiYTJjYTBjNmY2MCIsImlhdCI6MTY2MjIyMjA1MiwiZXhwIjoxNjYyMzA4NDUyfQ.FVVEZEcdKx2VrZqzSY3gQeNbxpblHbt5NjwMzkooNaI"
+              }
+            }
+          }
+        }
+      },
+      "LogoutResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "message",
+            "example": "Logout success with id630a7441b8ed1ff8a8a403ee"
+          },
+          "code": {
+            "type": "number",
+            "description": "code",
+            "example": "200"
+          }
+        },
+        "example": {
+        "email": "example@gmail.com",
+        "avatarURL": "www.gravatar.com/avatar/afd5b46d171ec84e3796561ca6d4f4a9",
+        "totalBalance": 5500
+    }
+      },
+
+      "BalanceResponse": {
+        "type": "object",
+        "properties": {
+          "totalBalance":{
+            "type": "number",
+            "example": 5000
+          }
+        }
+      },
+      "IncomeTransactionRequest": {
+        "type": "object",
+        "required": ["date", "description", "category", "sum"],
+        "properties": {
+            "date": {
+              "type": "string",
+              "description": "date",
+              "example": "2022-08-29T00:00:00.000Z"
+            },
+            "description": {
+              "type": "string",
+              "description": "any description",
+              "example": "premium"
+            },
+            "category": {
+              "type": "string",
+              "description": "one of 'Дохід' or 'Доп.дохід'",
+              "example": "Доп.дохід"
+            },
+            "sum": {
+              "type": "number",
+              "description": "sum transaction",
+              "example": "6500"
+            }
+        }
+      },
+      "IncomeTransactionResponse": {
+        "type": "object",
+        "required": ["id", "date", "owner", "sum", "description", "category"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Transaction id",
+            "example": "630c6424c4126b2f6d97fa7f"
+          },
+          "date": {
+            "type": "string",
+            "description": "Date transaction",
+            "example": "2022-01-01T00:00:00.000Z"
+          },
+          "owner": {
+            "type": "string",
+            "description": "User id",
+            "example": "_id: 630a4ce122d8de88190363c9"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description transaction",
+            "example": "premium"
+          },
+          "category": {
+            "type": "string",
+            "description": "one of 'Дохід' or 'Доп.дохід'",
+            "example": "Доп.дохід"
+          },
+          "sum": {
+            "type": "number",
+            "description":"sum description",
+            "example": 6500
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Date transaction",
+            "example": "2022-08-29T07:00:52.786Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Date transaction",
+            "example": "2022-08-29T07:00:52.786Z"
+          } 
+        }
+      },
+      "ExpenseTransactionRequest": {
+        "type": "object",
+        "required": ["date", "description", "category", "sum"],
+        "properties": {
+            "date": {
+              "type": "string",
+              "description": "date",
+              "example": "2022-08-29T00:00:00.000Z"
+            },
+            "description": {
+              "type": "string",
+              "description": "any description",
+              "example": "banana"
+            },
+            "category": {
+              "type": "string",
+              "description": "one of 'Транспорт', 'Продукти', 'Здоровя', 'Алкоголь', 'Розваги', 'Дім', 'Техніка', 'Комуналка', 'Спорт, хобі', 'Освіта', 'Інше'",
+              "example": "Продукти"
+            },
+            "sum": {
+              "type": "number",
+              "description": "sum transaction",
+              "example": "100"
+            }
+        }
+      },
+      "ExpanseTransactionResponse": {
+        "type": "object",
+        "required": ["id", "date", "owner", "sum", "description", "category"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Transaction id",
+            "example": "630c6424c4126b2f6d97fa7f"
+          },
+          "date": {
+            "type": "string",
+            "description": "Date transaction",
+            "example": "2022-01-01T00:00:00.000Z"
+          },
+          "owner": {
+            "type": "string",
+            "description": "User id",
+            "example": "_id: 630a4ce122d8de88190363c9"
+          },
+          "description": {
+            "type": "string",
+            "description": "Any description",
+            "example": "banana"
+          },
+          "category": {
+            "type": "string",
+            "description": "one of 'Транспорт', 'Продукти', 'Здоровя', 'Алкоголь', 'Розваги', 'Дім', 'Техніка', 'Комуналка', 'Спорт, хобі', 'Освіта', 'Інше'",
+            "example": "products"
+          },
+          "sum": {
+            "type": "number",
+            "description":"sum description",
+            "example": 100
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Date transaction",
+            "example": "2022-08-29T07:00:52.786Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Date transaction",
+            "example": "2022-08-29T07:00:52.786Z"
+          } 
+        }
+      },
+      "DeleteTransactionResponse": {
+        "type": "object",
+        "required": ["message", "newBalance"],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "message",
+            "example": "Transaction with ID: 6314ea32e43673717f8f6b1e deleted"
+          },
+          "newBalance": {
+            "type": "number",
+            "description": "code",
+            "example": "40000"
+          }
+        }
+      },
+      "ReportByCategoryForMonthAndYearResponse":{
+        "type": "object",
+        "required": ["totalIncome", "totalExpense", "incomeForMonthOfYear", "expenseForMonthOfYear"],
+        "properties": {
+          "totalIncome": {
+            "type": "number",
+            "description": "message",
+            "example": 48500
+          },
+          "totalExpense": {
+            "type": "number",
+            "description": "code",
+            "example": 32950
+          },
+          "incomeForMonthOfYear": {
+            "type": "object",
+            "example": {
+              "Дохід": 40000,
+              "Доп.дохід": 8500
+            }
+          },
+          "expenseForMonthOfYear": {
+            "type": "object",
+            "description": "code",
+            "example": {
+              "Транспорт": 3500,
+              "Продукти": 9000,
+              "Здоров'я": 2000,
+              "Алкоголь": 0,
+              "Розваги": 3500,
+              "Дім": 8000,
+              "Техніка": 0,
+              "Комуналка": 1750,
+              "Спорт, хобі": 1500,
+              "Освіта": 3500,
+              "Інше": 200
+            }
+          }
+        }
+      },
+      "ReportByMonthForYear": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "Січень": {
+            "type": "number",
+            "description": "May",
+            "example": 33000
+          },
+          "Лютий": {
+            "type": "number",
+            "description": "May",
+            "example": 50000
+          },
+          "Березень": {
+            "type": "number",
+            "description": "May",
+            "example": 17000
+          },
+          "Квітень": {
+            "type": "number",
+            "description": "May",
+            "example": 28600
+          },
+          "Травень": {
+            "type": "number",
+            "description": "May",
+            "example": 40000
+          },
+          "Червень": {
+            "type": "number",
+            "description": "June",
+            "example": 35400
+          },
+          "Липень": {
+            "type": "number",
+            "description": "July",
+            "example": 25000
+        }
+      }
+    },
+      "ReportByDescriptionForMonthResponse": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "Продукти": {
+            "type":"object",
+            "required":[],
+            "properties":{
+              "Телятина": {
+                "type": "string",
+                "example": 1300
+              },
+              "Цебуля": {
+                "type": "string",
+                "example": 300
+              },
+              "Морква": {
+                "type": "string",
+                "example": 350
+              },
+              "Риба": {
+                "type": "string",
+                "example": 1500
+              },
+              "Цукерки": {
+                "type": "string",
+                "example": 850
+              },
+              "Вода": {
+                "type": "string",
+                "example": 250
+              },
+              "Фрукти": {
+                "type": "string",
+                "example": 730
+            }
+          }
+        }
+      }
+    },
+    "ReportByDayResponse": {
+      "type": "object",
+      "required": ["incomeByDay", "expenseByDay"],
+      "properties":{
+        "incomeByDay":{
+          "type": "array",
+          "required": [],
+          "description":"Any description",
+          "example":{
+            "_id": "631940a206d99621a33e90d4",
+            "date": "2022-08-20T00:00:00.000Z",
+            "owner": "63193f96df140cc055636ce9",
+            "description": "apple",
+            "category": "Дохід",
+            "sum": 25000,
+            "createdAt": "2022-09-08T01:08:50.156Z",
+            "updatedAt": "2022-09-08T01:08:50.156Z"
+          }
+        },
+          "expenseByDay":{
+            "type": "array",
+            "required": [],
+            "description":"Any description",
+            "example": [{
+              "_id": "2022-09-08T01:08:50.156Z",
+              "date": "2022-08-20T00:00:00.000Z",
+              "owner": "63193f96df140cc055636ce9",
+              "description": "apple",
+              "category": "Продукти",
+              "sum": 2500,
+              "createdAt": "2022-09-08T01:08:50.156Z",
+              "updatedAt": "2022-09-08T01:08:50.156Z"
+          },
+          {
+              "_id": "2022-09-08T01:08:50.156Z",
+              "date": "2022-08-20T00:00:00.000Z",
+              "owner": "63193f96df140cc055636ce9",
+              "description": "apple",
+              "category": "Продукти",
+              "sum": 2500,
+              "createdAt": "2022-09-08T01:08:50.156Z",
+              "updatedAt": "2022-09-08T01:08:50.156Z"
+          }]
+        } 
+      }
+    }
+    
+  },
+
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
